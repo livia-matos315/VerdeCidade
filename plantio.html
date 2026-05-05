@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VerdeCidade</title>
+    <link rel="stylesheet" href="style.css">
+
+
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="menu">
+                <a href="login.html">Login</a>
+                <a href="painel.html">Painel de Controle</a>
+                <a href="plantio.html">Novo Plantio</a>
+                <a href="mapa.html">Mapa da Horta</a>
+            </div>
+        </nav>
+        <div class="container">
+            <h1>Bem-vindo ao VerdeCidade!</h1>
+        </div>
+    </header>
+    <br>
+    <div class="caixa-item" id="secao-plantio">
+    <h2>Novo Plantio</h2>
+    <form id="form-plantio">
+        <label for="plantio">Vegetal:</label>
+        <select id="plantio">
+            <option value="cenoura">Cenoura</option>
+            <option value="alface">Alface</option>
+            <option value="batata">Batata</option>
+            <option value="tomate">Tomate</option>
+            <option value="cebola">Cebola</option>
+        </select>
+
+        <label for="data">Data de Plantio:</label>
+        <input type="date" id="data" required>
+
+        <label for="quantidade">Área (m²):</label>
+        <input type="number" id="quantidade" required>
+
+        <label for="endereco">Endereço da Horta:</label>
+        <input type="text" id="endereco" required>
+        <button type="button" id="btn-salvar">Adicionar à Horta</button>
+    </form>
+</div>
+    </section>
