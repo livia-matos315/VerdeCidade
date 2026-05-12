@@ -8,63 +8,64 @@ function fazerLogin() {
         alert("Usuário ou senha incorreto!");
     }
 }
-document.getElementById('btn-salvar').addEventListener('click',
-    function () {
-        const novoPlantio = {
-            vegetal: document.getElementById('plantio').value,
-            data: document.getElementById('data').value,
-            quantidade: document.getElementById('quantidade').value,
-            endereco: document.getElementById('endereco').value
-        };
-
-        const plantios = JSON.parse(localStorage.getItem('plantios') || '[]');
-        plantios.push(novoPlantio);
-        localStorage.setItem('plantios', JSON.stringify(plantios));
-        alert('Plantio adicionado com sucesso!');
-
-    });
-
 const infoCulturas = {
     Alface: { ciclo: 45, sementesM2: 50 },
     Tomate: { ciclo: 90, sementesM2: 10 },
     Cenoura: { ciclo: 70, sementesM2: 100 },
+    Cebola: { ciclo: 100, sementesM2: 90 },
+    Batata: { ciclo: 115, sementesM2: 6 }
 };
 
+    function cadastrarPlantio(event) {
+        event.preventDefault();
 
-function cadastrarPlantio(event) {
-    event.preventDefault();
+        const vegetalSelecionado = document.getElementById("plantio").value;
+        const dataPlantio = document.getElementById("data").value;
+        const areaM2 = parseFloat(document.getElementById("quantidade").value);
+        const enderecoHorta = document.getElementById("endereco").value;
 
-    const plantio = document.getElementById("plantio").value;
-    const data = document.getElementById("data").value;
-    const quantidade = parseFloat(document.getElementById("quantidade").value);
-    const endereco = document.getElementById("endereco").value;
+        console.log(vegetalSelecionado);
 
-    let dataColheita = new Date(data);
-    dataColheita.setDate(dataColheita.getDate() + infoCulturas[plantio].ciclo);
+        if (!vegetalSelecionado || !dataPlantio || !areaM2 || !enderecoHorta) {
+            alert("Por favor, preencha todos os campos do formulário!");
+            return;
+        }
 
-    const totalSementes = Math.ceil(areaM2 * infoCulturas[plantio].sementesM2);
+        const vegetalChave = vegetalSelecionado.charAt(0).toUpperCase() + vegetalSelecionado.slice(1);
+        const culturaInfo = infoCulturas[vegetalChave];
 
-    const novoCanteiro = {
-        id: Date.now(),
-        plantio: plantio,
-        dataColheita: dataColheita.toLocaleDateString("pt-BR"),
-        timestampColheita: dataColheita.getTime(),
-        local: endereco,
-        sementes: totalSementes,
+        if (!culturaInfo) {
+            alert("Erro: Cultura não encontrada nas configurações.");
+            return;
+        }
+
+        let dataColheita = new Date(dataPlantio);
+        dataColheita.setDate(dataColheita.getDate() + culturaInfo.ciclo);
+
+        const totalSementes = Math.ceil(areaM2 * culturaInfo.sementesM2);
+
+
+        const novoCanteiro = {
+            id: Date.now(),
+            cultura: vegetalChave,
+            dataColheita: dataColheita.toLocaleDateString("pt-BR"),
+            timestampColheita: dataColheita.getTime(),
+            local: enderecoHorta,
+            sementes: totalSementes,
+        };
+
+        let lista = JSON.parse(localStorage.getItem("hortas")) || [];
+        lista.push(novoCanteiro);
+        localStorage.setItem("hortas", JSON.stringify(lista));
+        console.log(lista);
+        alert(`✅ Canteiro cadastrado com sucesso!\nCalculamos ${totalSementes} sementes necessárias.`);
+        window.location.href = "painel.html";
     };
 
 
-    let lista = JSON.parse(localStorage.getItem("hortas")) || [];
-    lista.push(novoCanteiro);
-    localStorage.setItem("hortas", JSON.stringify(lista));
-
-    alert("✅ Canteiro cadastrado! Calculamos " + totalSementes + " sementes.");
-    window.location.href = "painel-de-controle.html";
-}
-
 function carregarPainel() {
     const listaCanteiros = document.getElementById("lista-canteiros");
-    if (!listaCanteiros) return; // Só roda se estiver na página do painel
+    if (!listaCanteiros) return;
 
     const dados = JSON.parse(localStorage.getItem("hortas")) || [];
 
@@ -76,7 +77,7 @@ function carregarPainel() {
 
 
         const card = document.createElement("article");
-        card.className = card - minimalista ${ estaPronto ? "alerta" : "" };
+        card.className =` card - minimalista ${ estaPronto ? "alerta" : "" }`;
 
         card.innerHTML = `
             <div class="card-header">
@@ -103,22 +104,22 @@ function removerCanteiro(id) {
     carregarPainel();
 }
 
-window.onload = () => {
-    const form = document.getElementById("form-plantio");
-    if (form) form.addEventListener("submit", cadastrarPlantio);
-    carregarPainel();
-};
+// window.onload = () => {
+//     const form = document.getElementById("form-plantio");
+//     if (form) form.addEventListener("submit", cadastrarPlantio());
+//     carregarPainel();
+// };
 
 function irPara(pagina) {
     switch (pagina) {
         case "painel":
-            window.location.href = "/pages/painel-de-controle.html";
+            window.location.href = "painel.html";
             break;
         case "plantio":
-            window.location.href = "/pages/novo-plantio.html";
+            window.location.href = "plantio.html";
             break;
         case "mapa":
-            window.location.href = "/pages/mapa-plantio.html";
+            window.location.href = "mapa.html";
             break;
         default:
             console.error("Página desconhecida:", pagina);
